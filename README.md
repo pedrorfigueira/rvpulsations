@@ -1,4 +1,4 @@
-# rvpulsations
+# rvpulsim
 
 ## Overview
 
