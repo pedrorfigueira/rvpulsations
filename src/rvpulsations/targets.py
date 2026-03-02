@@ -7,7 +7,7 @@ class Target:
     L: float
     M: float
     R: float
-    det_config: tuple[int, float, float]  # Nexp, exptime[s], readout[s]
+    det_config: tuple[int, float, float]  # Nexp, exptime[s], interval[s]
     photon_noise: float  # m/s
 
 

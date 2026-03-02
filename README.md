@@ -1,10 +1,34 @@
-# RVpulsations
-Monte Carlo simulation of stellar pulsation-induced radial velocity noise. Described in [Figueira et al. (2025)](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F/abstract), 
-used in Figueira et al. (2026, *in press*)
+# rvpulsations
 
-## Methodology and Performance
+## Overview
 
-### Exposure Averaging Method
+This package simulates the impact of stellar p-mode pulsations on
+radial-velocity observations. Described in [Figueira et al. (2025)](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F/abstract), 
+used also in Figueira et al. (2026, *in press*).
+
+We consider a sequence of `N` consecutive observations, each defined by:
+
+- an exposure time `T` [s],
+- a photon-noise uncertainty `Pn` [m/s],
+- and a readout / interval `I` [s] between exposures.
+
+For a star characterized by the fundamental parameters
+`Teff`, `L`, `M`, and `R`, asteroseismic scaling relations are used to
+estimate the oscillation properties (`nu_max`, `Delta_nu`, envelope amplitude).
+
+A multi-mode sinusoidal pulsation spectrum is constructed and
+analytically integrated over each exposure duration, allowing the
+exact computation of exposure-averaged radial velocities without
+time-domain sampling.
+
+Monte Carlo simulations are then used to estimate:
+
+- the dispersion of nightly mean radial velocities, and
+- the intra-night radial-velocity scatter,
+
+enabling direct comparison with observed RV measurement statistics.
+
+### Exposure Averaging
 
 Earlier versions of the code computed exposure-averaged radial velocities by numerically sampling the pulsation signal in time and averaging the sampled values.
 The current versions use an **analytic exposure integration**. For a sinusoidal mode
@@ -23,7 +47,6 @@ where:
 - `sinc(x) = sin(x) / x`
 
 This formula is mathematically exact for a linear sinusoidal signal.
-
 For multiple p-modes, the exposure-averaged velocity is simply the sum
 over all modes using the same expression.
 
@@ -35,9 +58,7 @@ The previous numerical approach scaled as:
 
     O(n_iter × N_exp × N_time × N_modes)
 
-because the signal was sampled in time.
-
-The analytic approach removes the time-sampling dimension and scales as:
+because the signal was sampled in time. The analytic approach removes the time-sampling dimension and scales as:
 
     O(n_iter × N_exp × N_modes)
 
@@ -82,6 +103,8 @@ Basic run:
 ```bash
 rvpulsim --target HD127195
 ```
+
+to load the target observation setup defined in `targets.py`
 
 ### Options
 
@@ -136,13 +159,6 @@ The `--seed` option ensures deterministic Monte Carlo output using NumPy's `defa
 
 ---
 
-## Scientific Notes
-
-* Nightly RV means are modeled as Gaussian-distributed.
-* Nightly RV scatter follows a lognormal distribution.
-* Outputs are reported in cm/s for compatibility with high-precision RV literature.
-
-
 
 ## 📚 Program Structure
 
@@ -151,17 +167,15 @@ rvpulsations/
 ├─ pyproject.toml
 ├─ README.md
 ├─ .gitignore
-├─ src/
-│  └─ rvpulsations/
-│     ├─ __init__.py
-│     ├─ targets.py          # stellar targets & exposure configs
-│     ├─ scaling.py          # asteroseismic scaling relations
-│     ├─ models.py           # sinusoid + p-modes models
-│     ├─ simulation.py       # Monte Carlo engine
-│     ├─ plotting.py         # visualization
-│     └─ cli.py              # command-line interface
-└─ tests/
-   └─ test_scaling.py
+└─ src/
+   └─ rvpulsations/
+      ├─ __init__.py
+      ├─ targets.py          # targets & observational setup
+      ├─ scaling.py          # asteroseismic scaling relations
+      ├─ models.py           # sinusoid + p-modes models
+      ├─ simulation.py       # Monte Carlo engine
+      ├─ plotting.py         # visualization
+      └─ cli.py              # command-line interface
 ```
 
 
@@ -169,8 +183,5 @@ rvpulsations/
 
 Pedro Figueira acknowledges financial support from the Severo Ochoa grant CEX2021-001131-S funded by MCIN/AEI/10.13039/501100011033. Pedro Figueira is also funded by the European Union (ERC, THIRSTEE, 101164189). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Research Council. Neither the European Union nor the granting authority can be held responsible for them.
 
-This project depends on several open-source scientific and visualization packages. We gratefully acknowledge their authors and contributors:
-
-NumPy and SciPy provide the core array infrastructure and numerical utilities used in backend processing. Matplotlib is used for plotting, and Panel provides the UI layout, reactive widgets, and server backend that power the web-based interface.
-
+This project depends on several open-source scientific and visualization packages: NumPy, SciPy and Matplotlib.
 We extend sincere thanks to all of these communities for developing and maintaining the scientific Python ecosystem.
