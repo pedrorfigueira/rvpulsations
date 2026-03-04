@@ -6,7 +6,7 @@ This package simulates the impact of stellar p-mode pulsations on
 radial-velocity observations. Described in [Figueira et al. (2025)](https://ui.adsabs.harvard.edu/abs/2025A%26A...700A.174F/abstract), 
 used also in Figueira et al. (2026, *in press*).
 
-We consider a sequence of `N` consecutive observations, each defined by:
+We simulate impact on an observing campaign (time series), for which in each night we take a sequence of `N` consecutive observations, defined by:
 
 - an exposure time `T` [s],
 - a photon-noise uncertainty `Pn` [m/s],
@@ -14,19 +14,14 @@ We consider a sequence of `N` consecutive observations, each defined by:
 
 For a star characterized by the fundamental parameters
 `Teff`, `L`, `M`, and `R`, asteroseismic scaling relations are used to
-estimate the oscillation properties (`nu_max`, `Delta_nu`, envelope amplitude).
+estimate the oscillation properties (`nu_max`, `Delta_nu`, envelope amplitude in RVs).
 
 A multi-mode sinusoidal pulsation spectrum is constructed and
 analytically integrated over each exposure duration, allowing the
 exact computation of exposure-averaged radial velocities without
 time-domain sampling.
 
-Monte Carlo simulations are then used to estimate:
-
-- the dispersion of nightly mean radial velocities, and
-- the intra-night radial-velocity scatter,
-
-enabling direct comparison with observed RV measurement statistics.
+Monte Carlo simulations are then used to estimate the impact of pulsations and photon noise on the nightly-average radial-velocities, along with the the intra-night radial-velocity scatter.
 
 ### Exposure Averaging
 
@@ -163,12 +158,12 @@ The `--seed` option ensures deterministic Monte Carlo output using NumPy's `defa
 ## 📚 Program Structure
 
 ```
-rvpulsations/
+rvpulsim/
 ├─ pyproject.toml
 ├─ README.md
 ├─ .gitignore
 └─ src/
-   └─ rvpulsations/
+   └─ rvpulsim/
       ├─ __init__.py
       ├─ targets.py          # targets & observational setup
       ├─ scaling.py          # asteroseismic scaling relations

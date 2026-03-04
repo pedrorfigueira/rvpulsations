@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "rvpulsations"
-version = "1.0.0"
-description = "Monte Carlo simulation of stellar pulsation RV noise"
+name = "rvpulsim"
+version = "1.0.1"
+description = "Simulator of Radial Velocity signals created by stellar pulsations "
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
@@ -19,4 +19,4 @@ dependencies = [
 ]
 
 [project.scripts]
-rvpulsim = "rvpulsations.cli:main"
+rvpulsim = "rvpulsim.cli:main"

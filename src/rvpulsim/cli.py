@@ -1,5 +1,7 @@
 import argparse
 import numpy as np
+import warnings 
+
 from scipy.stats import norm, lognorm
 
 from .targets import get_target
@@ -98,10 +100,10 @@ def main():
     ratio = nu_max / delta_nu
 
     print("---------------- Asteroseismic Parameters -----------")
-    print(f"A_env        : {A_env:.3f} m/s")
-    print(f"nu_max       : {nu_max:.3e} Hz  (P_max = {P_max_min:.2f} min)")
-    print(f"Delta_nu     : {delta_nu:.3e} Hz  (1/Δnu = {inv_delta_nu_hours:.2f} h)")
-    print(f"nu_max/Δnu   : {ratio:.2f}")
+    print(f"A_env          : {A_env:.3f} m/s")
+    print(f"nu_max         : {nu_max:.3e} Hz   (P_max = {P_max_min:.2f} min)")
+    print(f"Delta_nu       : {delta_nu:.3e} Hz   (1/Δnu = {inv_delta_nu_hours:.2f} h)")
+    print(f"nu_max/Δnu     : {ratio:.2f}")
     print("----------------------------------------------------\n")
 
     # ============================================================
@@ -117,13 +119,20 @@ def main():
         rng=rng,
     )
 
-    mu, sigma = norm.fit(rv_mean * 100.0)
-    shape, loc, scale = lognorm.fit(rv_scat * 100.0)
-
     print("==================== Results ========================")
-    print(f"Nightly mean RV σ (Gaussian fit)     : {sigma / 100:.2f} m/s")
-    print(f"Nightly scatter median (Lognormal fit): "
-          f"{lognorm.median(shape, loc, scale) / 100:.2f} m/s")
+    
+    mu, sigma = norm.fit(rv_mean * 100.0)
+    sigma_val = sigma / 100.0
+    
+    print(f"Nightly mean RV σ (Gaussian fit)     : {sigma_val:.2f} m/s")
+    
+    if Nexp > 1:
+        shape, loc, scale = lognorm.fit(rv_scat * 100.0)
+        scatter_median = lognorm.median(shape, loc, scale) / 100.0
+        print(f"Nightly scatter median (Lognormal fit): {scatter_median:.2f} m/s")
+    else:
+        print("Nightly scatter median (Lognormal fit): --")
+
     print("=====================================================\n")
 
     # Plot or save if requested

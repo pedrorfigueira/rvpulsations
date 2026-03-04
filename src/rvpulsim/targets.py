@@ -22,7 +22,7 @@ TARGETS = {
         name="HD127195",
         Teff=5000.0, L=10.0, M=1.40, R=4.20,
         det_config=(3, 300.0, 1200.0),
-        photon_noise=3.6,
+        photon_noise=4.5,
     ),
 }
 
