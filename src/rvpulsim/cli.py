@@ -99,11 +99,20 @@ def main():
     inv_delta_nu_hours = 1.0 / (delta_nu * 3600.0)
     ratio = nu_max / delta_nu
 
+    n_max = ratio
+
+    if n_max > 20:
+        star_class = "main sequence"
+    elif n_max > 10:
+        star_class = "subgiant"
+    else:
+        star_class = "giant"
+
     print("---------------- Asteroseismic Parameters -----------")
     print(f"A_env          : {A_env:.3f} m/s")
     print(f"nu_max         : {nu_max:.3e} Hz   (P_max = {P_max_min:.2f} min)")
     print(f"Delta_nu       : {delta_nu:.3e} Hz   (1/Δnu = {inv_delta_nu_hours:.2f} h)")
-    print(f"nu_max/Δnu     : {ratio:.2f}")
+    print(f"nu_max/Δnu     : {ratio:.2f}          ({star_class})")
     print("----------------------------------------------------\n")
 
     # ============================================================
